@@ -5,34 +5,40 @@
 
 //#define DEBUG
 
-#ifdef __APPLE__
-#include "stdc++.h"
+#ifdef _APPLE_
+    #include <stdc++.h>
 #else
-#include <bits/stdc++.h>
+    #include <bits/stdc++.h>
 #endif
 
 using namespace std;
 
 /*MACROS*/
 //FUNCTIONS
-#define in_range(i, l, r) for(int i = l; i < r; i++)
-#define repeat(n) for(int I = 0; I < n; I++)
+#define in_range(i, l, r, step) for(ll i = l; i < r; i += 1LL*step)
+#define in_range(i, l, r) for(ll i = l; i < r; i++)
+
 #define all(v) begin(v), end(v)
-#define rall(v) v.rbegin(), v.rend()
-#define clr(x) memset(x, 0, sizeof x)
-#define present(element, container) ((container).find(element) != end(container))
-//traverse throught container
+#define rall(v) (v).rbegin(), (v).rend()
+
 #define tr(container, it) for(auto it = begin(container); it != end(container); it++)
-#define rtr(container, it) for(auto it = container.rbegin(); it != container.rend(); it++)
+#define rtr(container, it) for(auto it = (container).rbegin(); it != (container).rend(); it++)
+
+#define present(element, container) ((container).find(element) != end(container))
 
 //ABBREVIATIONS
-#define sz(c) (int(c.size()))
+#define sz(c) (ll(c.size()))
 #define pb push_back
 #define fst first
 #define scd second
 
+//TYPE SAFETY
+#define sqrt(x) sqrt(1.0*(x))
+#define pow(x, n) pow(1.0*(x), n)
+
 //CONSTANTS
-#define INF 1000000001
+#define INF 1011111111
+#define LLINF 1000111000111000111LL
 #define EPS (double)1e-8
 
 /*TYPES*/
@@ -41,9 +47,15 @@ typedef long long ll;
 typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 
+/*TEMPLATE FUNCTIONS*/
+//BIT OPERATIONS
+#define checkbit(n, i) ((n >> i) & 1)
+template<typename T> inline T bitcount(T n){T _n = n; return __builtin_popcount(_n); }
+template<typename T> inline T isPowerOfTwo(T n){T _n = n; return (n != 0 and ((n&(n-1)) == 0)); }
+
 /*TEMPLATE ALGORITHMS*/
 template<typename T> inline T sqr(T x){T x_ = (x); return x_*x_;}
-template<typename T> inline T qbr(T x){T x_ = (x); return x_*x_*x_;}
+template<typename T> inline T qbr(T x){T x_ = (x); return ((x_*x_)*x_);}
 template<typename T> inline int sign(T x){T x_ = (x); return ((x_>T(0))-(x_<T(0)));}
 template<typename T> inline T mod(T x, T m){T x_ = (x); return (((x_) >= 0) ? ((x_) % (m)) : ((((x_) % (m))+(m))%(m)));}
 template<typename T> inline T gcd(T a, T b){while(b){T t = a % b; a = b; b = t;} return a;}
@@ -51,8 +63,6 @@ template<typename T> inline T gcd_ex(T a, T b, T& x, T& y){if(b==0){x=1,y=0; ret
 template<typename T> inline T lcm(T a, T b){return (a*(b/gcd(a, b)));}
 template<typename T> inline T binpow(T x, T deg){T res=(T)1; for(;deg;x*=x,deg>>=1)if(deg & 1)res *= x;return res;}
 template<typename T> inline T modpow(T x, T deg, T m){assert(deg>=(T)0);T res=(T)(1); for(;deg;x=mod(mod(x, m) *mod(x, m), m),deg>>=1)if(deg&1)res=mod(mod(res, m)*mod(x, m), m);return res;}
-template<typename T> inline bool is_between(T POSITION, T LEFT, T RIGHT){return (LEFT < POSITION) && (POSITION < RIGHT);}
-template<typename T> inline bool is_inside(T POSITION, T LEFT, T RIGHT){return (LEFT <= POSITION) && (POSITION <= RIGHT);}
 
 /*COMBINATORS*/
 template <typename Collection, typename UnaryOperation> void foreach(Collection &col, UnaryOperation op){for_each(all(col), op);}
@@ -72,10 +82,47 @@ template<class T> ostream& operator <<(ostream& os, const vector<T>& Col){for(au
 template<class T> ostream& operator <<(ostream& os, const set<T>& Col){for(auto &el : Col) os << el << " "; return os;}
 template<class T1, class T2> ostream& operator <<(ostream& os, const map<T1, T2>& Col){for(auto &el : Col) os << el << " "; return os;}
 
+//VARIADIC INPUT
+template<typename T> void read(T& t){ cin >> t; }
+template<typename First, typename... Args> void read(First& f, Args&... args){ cin >> f; read(forward<Args>(args)...); }
+
+//VARIADIC OUTPUT
+template<typename T> void print(T&& t){ cout << t << endl; }
+template<typename First, typename... Args> void print(First&& f, Args&&... args){ cout << f << " "; print(forward<Args>(args)...); }
+template<typename T> void printLn(T&& t){ cout << t << endl; }
+template<typename First, typename... Args> void printLn(First&& f, Args&&... args){ cout << f << endl; printLn(forward<Args>(args)...); }
+
+//VARIADIC TYPE DECLARATION
+template <typename T, size_t N>
+struct MakeTensor
+{
+    template <typename... Args>
+    static auto make_tensor(size_t first, Args... sizes)
+    -> vector<decltype(MakeTensor<T, N-1>::make_tensor(sizes...))>
+    {
+        auto inner = MakeTensor<T, N-1>::make_tensor(sizes...);
+        return vector<decltype(inner)>(first, inner);
+    }
+};
+
+template <typename T>
+struct MakeTensor<T, 1>
+{
+    static vector<T> make_tensor(size_t size) {
+        return vector<T>(size);
+    }
+};
+
+template <typename T, typename... Args>
+auto make_tensor(Args... args)
+-> decltype(MakeTensor<T, sizeof...(Args)>::make_tensor(args...))
+{
+    return MakeTensor<T, sizeof...(Args)>::make_tensor(args...);
+}
+
 int main(){
-    // ios::sync_with_stdio(false);
-    // freopen("in", "r", stdin);
-    // freopen("out", "w", stdout);
-    
+//    ios::sync_with_stdio(false);
+//    freopen("in", "r", stdin);
+//    freopen("out", "w", stdout);
     return 0;
 }
