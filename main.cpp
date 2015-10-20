@@ -49,9 +49,9 @@ typedef pair<ll, ll> pll;
 
 /*TEMPLATE FUNCTIONS*/
 //BIT OPERATIONS
-#define checkbit(n, i) ((n >> i) & 1)
-template<typename T> inline T bitcount(T n){T _n = n; return __builtin_popcount(_n); }
-template<typename T> inline T isPowerOfTwo(T n){T _n = n; return (n != 0 and ((n&(n-1)) == 0)); }
+template<typename T> inline T checkbit(T n, T i){T n_ = n; return ((n_ >> i) & T(1));}
+template<typename T> inline T bitcount(T n){T n_ = n; return __builtin_popcount(n_); }
+template<typename T> inline T isPowerOfTwo(T n){T n_ = n; return (n_ != 0 and ((n_&(n_-1)) == 0)); }
 
 /*TEMPLATE ALGORITHMS*/
 template<typename T> inline T sqr(T x){T x_ = (x); return x_*x_;}
@@ -93,32 +93,9 @@ template<typename T> void printLn(T&& t){ cout << t << endl; }
 template<typename First, typename... Args> void printLn(First&& f, Args&&... args){ cout << f << endl; printLn(forward<Args>(args)...); }
 
 //VARIADIC TYPE DECLARATION
-template <typename T, size_t N>
-struct MakeTensor
-{
-    template <typename... Args>
-    static auto make_tensor(size_t first, Args... sizes)
-    -> vector<decltype(MakeTensor<T, N-1>::make_tensor(sizes...))>
-    {
-        auto inner = MakeTensor<T, N-1>::make_tensor(sizes...);
-        return vector<decltype(inner)>(first, inner);
-    }
-};
-
-template <typename T>
-struct MakeTensor<T, 1>
-{
-    static vector<T> make_tensor(size_t size) {
-        return vector<T>(size);
-    }
-};
-
-template <typename T, typename... Args>
-auto make_tensor(Args... args)
--> decltype(MakeTensor<T, sizeof...(Args)>::make_tensor(args...))
-{
-    return MakeTensor<T, sizeof...(Args)>::make_tensor(args...);
-}
+template <typename T, size_t N> struct MakeTensor{ template <typename... Args> static auto make_tensor(size_t first, Args... sizes) -> vector<decltype(MakeTensor<T, N-1>::make_tensor(sizes...))> { auto inner = MakeTensor<T, N-1>::make_tensor(sizes...); return vector<decltype(inner)>(first, inner);} };
+template <typename T> struct MakeTensor<T, 1> { static vector<T> make_tensor(size_t size) { return vector<T>(size); }};
+template <typename T, typename... Args> auto make_tensor(Args... args) -> decltype(MakeTensor<T, sizeof...(Args)>::make_tensor(args...)){ return MakeTensor<T, sizeof...(Args)>::make_tensor(args...); }
 
 int main(){
 //    ios::sync_with_stdio(false);
