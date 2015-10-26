@@ -21,8 +21,8 @@ using namespace std;
 #define all(v) begin(v), end(v)
 #define rall(v) (v).rbegin(), (v).rend()
 
-#define tr(container, it) for(auto it = begin(container); it != end(container); it++)
-#define rtr(container, it) for(auto it = (container).rbegin(); it != (container).rend(); it++)
+#define tr(it, container) for(auto it = begin(container); it != end(container); it++)
+#define rtr(it, container) for(auto it = (container).rbegin(); it != (container).rend(); it++)
 
 #define present(element, container) ((container).find(element) != end(container))
 
@@ -67,7 +67,7 @@ template<typename T> inline T modpow(T x, T deg, T m){assert(deg>=(T)0);T res=(T
 /*COMBINATORS*/
 template <typename Collection, typename UnaryOperation> void foreach(Collection &col, UnaryOperation op){for_each(all(col), op);}
 template <typename Collection, typename UnaryOperation> Collection fmap(Collection &col, UnaryOperation op){transform(all(col), col.begin(), op); return col;}
-template <typename Collection, typename binop> Collection zip(Collection& fc, Collection& sc,binop op) {transform(all(fc), sc.begin(), fc.begin(), op);return fc;}
+template <typename Collection, typename binop> Collection zip(Collection& fc, Collection& sc,binop op) {transform(all(fc), sc.begin(), fc.begin(), op); return fc;}
 template <typename Collection, typename Condition> bool exists(Collection& col,Condition con) {auto exist = find_if(all(col), con); return exist != col.end();}
 template <typename Collection, typename Predicate> Collection filterNot(Collection& col, Predicate predicate) {auto returnIterator = remove_if(all(col), predicate); col.erase(returnIterator, end(col)); return col;}
 
@@ -83,14 +83,14 @@ template<class T> ostream& operator <<(ostream& os, const set<T>& Col){for(auto 
 template<class T1, class T2> ostream& operator <<(ostream& os, const map<T1, T2>& Col){for(auto &el : Col) os << el << " "; return os;}
 
 //VARIADIC INPUT
-template<typename T> void read(T& t){ cin >> t; }
-template<typename First, typename... Args> void read(First& f, Args&... args){ cin >> f; read(forward<Args>(args)...); }
+template<typename First> void read(First& t){ cin >> t; }
+template<typename First, typename... Args> void read(First& f, Args&... args){ cin >> f; read(forward<Args&>(args)...); }
 
 //VARIADIC OUTPUT
 template<typename T> void print(T&& t){ cout << t << endl; }
-template<typename First, typename... Args> void print(First&& f, Args&&... args){ cout << f << " "; print(forward<Args>(args)...); }
+template<typename First, typename... Args> void print(First&& f, Args&&... args){ cout << f << " "; print(forward<Args&&>(args)...); }
 template<typename T> void printLn(T&& t){ cout << t << endl; }
-template<typename First, typename... Args> void printLn(First&& f, Args&&... args){ cout << f << endl; printLn(forward<Args>(args)...); }
+template<typename First, typename... Args> void printLn(First&& f, Args&&... args){ cout << f << endl; printLn(forward<Args&&>(args)...); }
 
 //VARIADIC TYPE DECLARATION
 template <typename T, size_t N> struct MakeTensor{ template <typename... Args> static auto make_tensor(size_t first, Args... sizes) -> vector<decltype(MakeTensor<T, N-1>::make_tensor(sizes...))> { auto inner = MakeTensor<T, N-1>::make_tensor(sizes...); return vector<decltype(inner)>(first, inner);} };
@@ -98,8 +98,8 @@ template <typename T> struct MakeTensor<T, 1> { static vector<T> make_tensor(siz
 template <typename T, typename... Args> auto make_tensor(Args... args) -> decltype(MakeTensor<T, sizeof...(Args)>::make_tensor(args...)){ return MakeTensor<T, sizeof...(Args)>::make_tensor(args...); }
 
 int main(){
-//    ios::sync_with_stdio(false);
-//    freopen("in", "r", stdin);
+//      ios::sync_with_stdio(false);
+//     freopen("in", "r", stdin);
 //    freopen("out", "w", stdout);
     return 0;
 }
